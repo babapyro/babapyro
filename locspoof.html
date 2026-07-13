@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocSpoofer — Teleport Anywhere. Instantly.</title>
+    <meta name="description" content="The #1 GPS spoofing tool for iOS & Android. Fake your location on Snap Map, Life360, Find My & more. No jailbreak. No root. Works wirelessly.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0c0c0c;
+            --surface-2: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.2);
+            --white: #ffffff;
+            --gray-1: #f5f5f5;
+            --gray-2: #a0a0a0;
+            --gray-3: #666666;
+            --gray-4: #333333;
+            --green: #00d26a;
+            --green-dim: rgba(0,210,106,0.15);
+            --blue: #3b82f6;
+            --yellow: #FFFC00;
+            --purple: #8A2BE2;
+            --apple-green: #34C759;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--white);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── NAVIGATION ── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.25rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(5,5,5,0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .nav-logo {
+            font-weight: 900;
+            font-size: 1.25rem;
+            letter-spacing: -0.03em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo svg { width: 28px; height: 28px; }
+
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+
+        .nav-links a {
+            color: var(--gray-2);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--white); }
+
+        .nav-cta {
+            background: var(--white) !important;
+            color: var(--bg) !important;
+            padding: 0.5rem 1.25rem !important;
+            border-radius: 999px !important;
+            font-weight: 600 !important;
+            font-size: 0.875rem !important;
+        }
+
+        /* ── SCROLL REVEAL ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ── SECTIONS ── */
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 1.5rem;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--green-dim);
+            color: var(--green);
+            border: 1px solid rgba(0,210,106,0.2);
+            padding: 0.375rem 1rem;
+            border-radius: 999px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        h1, h2, h3 {
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.08;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            text-align: center;
+            padding-top: 10rem;
+            padding-bottom: 4rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.75rem, 9vw, 5.5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            display: inline;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            color: var(--gray-2);
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            max-width: 520px;
+            margin: 0 auto 2.5rem;
+        }
+
+        /* Animated Price */
+        .price-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            font-size: 1.125rem;
+        }
+
+        .price-old {
+            color: var(--gray-3);
+            text-decoration: line-through;
+            font-weight: 500;
+            font-size: 1.5rem;
+            transition: opacity 0.4s;
+        }
+
+        .price-new {
+            color: var(--green);
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .price-tag {
+            background: var(--green-dim);
+            color: var(--green);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.8125rem;
+            font-weight: 700;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+        }
+
+        .lemonsqueezy-button {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background: var(--white) !important;
+            color: #000 !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 1.0625rem !important;
+            font-weight: 700 !important;
+            padding: 1rem 2rem !important;
+            border-radius: 16px !important;
+            text-decoration: none !important;
+            border: none !important;
+            cursor: pointer !important;
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1),
+                        box-shadow 0.3s ease !important;
+            gap: 0.5rem !important;
+        }
+
+        .lemonsqueezy-button:hover {
+            transform: translateY(-3px) scale(1.02) !important;
+            box-shadow: 0 20px 40px rgba(255,255,255,0.12) !important;
+        }
+
+        .btn-trial {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            color: var(--white);
+            border: 1px solid var(--border-hover);
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-size: 1.0625rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1),
+                        background 0.3s, border-color 0.3s;
+        }
+
+        .btn-trial:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .btn-trial svg { width: 20px; height: 20px; }
+
+        .btn-subtext {
+            color: var(--gray-3);
+            font-size: 0.8125rem;
+            margin-top: -0.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Hero Mockup */
+        .hero-visual {
+            position: relative;
+            max-width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8),
+                        0 0 0 1px rgba(255,255,255,0.05) inset;
+        }
+
+        .hero-visual svg.map-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Floating glass panel */
+        .float-panel {
+            position: absolute;
+            background: rgba(12,12,12,0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.25rem;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.5);
+        }
+
+        .panel-main {
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 340px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .panel-header span {
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .status-dot::before {
+            content: '';
+            width: 8px; height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--green);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 6px var(--green); }
+            50% { box-shadow: 0 0 16px var(--green), 0 0 30px rgba(0,210,106,0.3); }
+        }
+
+        .coord-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .coord-box {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 0.625rem;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.75rem;
+            color: var(--gray-2);
+        }
+
+        .coord-box strong {
+            display: block;
+            font-size: 0.625rem;
+            color: var(--gray-3);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.125rem;
+            font-weight: 600;
+        }
+
+        /* Mini joystick floating */
+        .panel-joystick {
+            top: 2rem;
+            right: 1.5rem;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .joystick-ring {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .joystick-knob {
+            width: 28px; height: 28px;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            animation: joystick-move 4s ease-in-out infinite;
+        }
+
+        @keyframes joystick-move {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(12px, -8px); }
+            50% { transform: translate(-8px, 10px); }
+            75% { transform: translate(10px, 5px); }
+        }
+
+        .joystick-arrows {
+            position: absolute;
+            width: 100%; height: 100%;
+        }
+
+        .joystick-arrows span {
+            position: absolute;
+            font-size: 0.625rem;
+            color: rgba(255,255,255,0.25);
+        }
+        .joystick-arrows .j-up { top: 2px; left: 50%; transform: translateX(-50%); }
+        .joystick-arrows .j-down { bottom: 2px; left: 50%; transform: translateX(-50%); }
+        .joystick-arrows .j-left { left: 4px; top: 50%; transform: translateY(-50%); }
+        .joystick-arrows .j-right { right: 4px; top: 50%; transform: translateY(-50%); }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 2.5s infinite cubic-bezier(0.2,0.8,0.2,1);
+            transform-origin: center;
+        }
+
+        /* ── SOCIAL PROOF TICKER ── */
+        .ticker-wrap {
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 0;
+            background: var(--surface);
+        }
+
+        .ticker {
+            display: flex;
+            gap: 3rem;
+            animation: scroll-left 30s linear infinite;
+            width: max-content;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-3);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .ticker-item svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── APPS SECTION ── */
+        .apps-section { text-align: center; }
+
+        .apps-section h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .apps-section .subtitle {
+            color: var(--gray-2);
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            max-width: 500px;
+            margin: 0 auto 3.5rem;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .app-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.35s cubic-bezier(0.16,1,0.3,1),
+                        border-color 0.35s, box-shadow 0.35s;
+        }
+
+        .app-card:hover { transform: translateY(-6px); }
+
+        .app-card.snap:hover {
+            border-color: var(--yellow);
+            box-shadow: 0 12px 30px rgba(255,252,0,0.08);
+        }
+        .app-card.findmy:hover {
+            border-color: var(--apple-green);
+            box-shadow: 0 12px 30px rgba(52,199,89,0.08);
+        }
+        .app-card.life:hover {
+            border-color: var(--purple);
+            box-shadow: 0 12px 30px rgba(138,43,226,0.08);
+        }
+
+        .app-card svg.app-logo { width: 56px; height: 56px; }
+
+        .app-card h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .badge-active {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            background: var(--green-dim);
+            border: 1px solid rgba(0,210,106,0.2);
+            color: var(--green);
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-active::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--green);
+            animation: blink 1.5s infinite;
+        }
+
+        /* ── FEATURES BENTO ── */
+        .features-section { text-align: center; }
+
+        .features-section h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .features-section .subtitle {
+            color: var(--gray-2);
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            max-width: 500px;
+            margin: 0 auto 3.5rem;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-auto-rows: minmax(220px, auto);
+            gap: 1rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .bento-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.16,1,0.3,1),
+                        border-color 0.35s, background 0.35s;
+        }
+
+        .bento-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.025), transparent 60%);
+            pointer-events: none;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-hover);
+            background: var(--surface-2);
+        }
+
+        .bento-card.span-full {
+            grid-column: 1 / -1;
+            min-height: 260px;
+        }
+
+        .bento-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: auto;
+        }
+
+        .bento-icon svg { width: 22px; height: 22px; }
+
+        .bento-card h3 {
+            font-size: 1.375rem;
+            font-weight: 700;
+            margin-bottom: 0.375rem;
+            letter-spacing: -0.02em;
+        }
+
+        .bento-card p {
+            color: var(--gray-2);
+            font-size: 1rem;
+            max-width: 420px;
+        }
+
+        /* Visual element inside wide card */
+        .route-visual {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 200px;
+            height: 120px;
+            opacity: 0.5;
+        }
+
+        /* ── CTA ── */
+        .cta-section {
+            text-align: center;
+            padding-top: 8rem;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2.5rem, 7vw, 4.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .cta-section .subtitle {
+            color: var(--gray-2);
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            max-width: 480px;
+            margin: 0 auto 2rem;
+        }
+
+        .cta-price-wrapper {
+            margin-bottom: 2rem;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            color: var(--gray-4);
+            font-size: 0.8125rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 768px) {
+            .nav-links a:not(.nav-cta) { display: none; }
+
+            .hero { padding-top: 8rem; padding-bottom: 2rem; }
+            .hero h1 { font-size: 2.5rem; }
+            
+            .hero-visual { aspect-ratio: 4/3; border-radius: 16px; }
+            .panel-joystick { width: 72px; height: 72px; top: 1rem; right: 1rem; }
+            .joystick-ring { width: 60px; height: 60px; }
+            .joystick-knob { width: 22px; height: 22px; }
+            .panel-main { max-width: 260px; padding: 1rem; bottom: 1rem; }
+
+            section { padding: 4rem 1rem; }
+
+            .apps-grid { grid-template-columns: 1fr; max-width: 340px; }
+            .app-card { flex-direction: row; padding: 1.25rem 1.5rem; }
+            .app-card svg.app-logo { width: 44px; height: 44px; }
+
+            .bento-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: auto;
+            }
+            .bento-card { min-height: 200px !important; }
+            .route-visual { display: none; }
+
+            .price-new { font-size: 1.75rem; }
+
+            .btn-group { flex-direction: column; align-items: center; }
+            .lemonsqueezy-button, .btn-trial { width: 100%; max-width: 340px; justify-content: center; }
+        }
+
+        @media (max-width: 380px) {
+            .hero h1 { font-size: 2rem; }
+            .price-display { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav class="nav">
+    <div class="nav-logo">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="28" height="28" rx="8" fill="#fff"/>
+            <path d="M14 6C10.5 6 8 9.5 8 13c0 5 6 11 6 11s6-6 6-11c0-3.5-2.5-7-6-7z" fill="#000"/>
+            <circle cx="14" cy="12.5" r="2.5" fill="#fff"/>
+        </svg>
+        LocSpoofer
+    </div>
+    <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#apps">Apps</a>
+        <a href="https://cagandogan.gumroad.com/l/gpsSp00f" class="lemonsqueezy-button nav-cta">Get It Now</a>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="section-label reveal">GPS Spoofing Made Simple</div>
+    <h1 class="reveal reveal-delay-1"><span>Your Location.<br>Your Rules.</span></h1>
+    <p class="hero-sub reveal reveal-delay-2">The #1 plug-and-play GPS spoofer for iOS & Android. No jailbreak. No root. Works over Wi-Fi.</p>
+
+    <!-- Animated Price -->
+    <div class="price-display reveal reveal-delay-2">
+        <span class="price-old" id="price-old">$10.00</span>
+        <span class="price-new" id="price-new">$10.00</span>
+        <span class="price-tag" id="price-tag" style="opacity:0;">70% OFF</span>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="btn-group reveal reveal-delay-3">
+        <a href="https://cagandogan.gumroad.com/l/gpsSp00f" class="lemonsqueezy-button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            Buy Now — $3.00
+        </a>
+        <a href="#" class="btn-trial" id="btn-trial">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span id="trial-text">Free Trial — Download</span>
+        </a>
+    </div>
+    <p class="btn-subtext reveal reveal-delay-3">No credit card needed for free trial · Instant download</p>
+
+    <!-- Hero Dashboard Mockup -->
+    <div class="hero-visual reveal reveal-delay-4">
+        <svg class="map-svg" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="g" width="50" height="50" patternUnits="userSpaceOnUse">
+                    <path d="M50 0L0 0 0 50" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+                </pattern>
+                <radialGradient id="rg" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="rgba(0,210,106,0.08)"/>
+                    <stop offset="100%" stop-color="transparent"/>
+                </radialGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="#080808"/>
+            <rect width="100%" height="100%" fill="url(#g)"/>
+            <ellipse cx="600" cy="300" rx="400" ry="250" fill="url(#rg)"/>
+            <!-- Roads -->
+            <path d="M0,250 C200,200 500,400 800,280 S1100,150 1200,200" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+            <path d="M0,450 C300,500 400,300 700,380 S950,500 1200,420" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+            <path d="M400,0 C420,200 380,400 450,675" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+            <path d="M800,0 C780,250 820,450 750,675" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+            <!-- Animated Route -->
+            <path d="M200,500 C350,350 500,400 600,300" fill="none" stroke="rgba(0,210,106,0.3)" stroke-width="3" stroke-dasharray="8 8">
+                <animate attributeName="stroke-dashoffset" from="0" to="-80" dur="3s" repeatCount="indefinite"/>
+            </path>
+            <!-- Target -->
+            <g transform="translate(600,300)">
+                <circle r="60" fill="none" stroke="rgba(0,210,106,0.25)" stroke-width="1" class="pulse-ring"/>
+                <circle r="30" fill="rgba(0,210,106,0.06)" stroke="rgba(0,210,106,0.15)" stroke-width="1"/>
+                <circle r="12" fill="rgba(0,210,106,0.1)" stroke="var(--green)" stroke-width="2"/>
+                <circle r="4" fill="var(--green)"/>
+            </g>
+            <!-- Origin Pin -->
+            <g transform="translate(200,500)" opacity="0.5">
+                <circle r="5" fill="#fff"/>
+                <circle r="10" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+            </g>
+        </svg>
+
+        <!-- Floating Dashboard Panel -->
+        <div class="float-panel panel-main">
+            <div class="panel-header">
+                <span>📍 Location Override</span>
+                <div class="status-dot">Active</div>
+            </div>
+            <div class="coord-row">
+                <div class="coord-box">
+                    <strong>Latitude</strong>
+                    35.6762° N
+                </div>
+                <div class="coord-box">
+                    <strong>Longitude</strong>
+                    139.6503° E
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Joystick -->
+        <div class="float-panel panel-joystick">
+            <div class="joystick-ring">
+                <div class="joystick-arrows">
+                    <span class="j-up">▲</span>
+                    <span class="j-down">▼</span>
+                    <span class="j-left">◀</span>
+                    <span class="j-right">▶</span>
+                </div>
+                <div class="joystick-knob"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── SOCIAL PROOF TICKER ── -->
+<div class="ticker-wrap">
+    <div class="ticker" id="ticker">
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Works with all apps
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            No jailbreak needed
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Wireless over Wi-Fi
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            iOS & Android
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            50,000+ users
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Zero detection
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Instant setup
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Works with all apps
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            No jailbreak needed
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Wireless over Wi-Fi
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            iOS & Android
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            50,000+ users
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Zero detection
+        </div>
+        <div class="ticker-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Instant setup
+        </div>
+    </div>
+</div>
+
+<!-- ── APPS SECTION ── -->
+<section class="apps-section" id="apps">
+    <div class="section-label reveal">Compatible Apps</div>
+    <h2 class="reveal reveal-delay-1">Total Stealth.</h2>
+    <p class="subtitle reveal reveal-delay-2">Undetectable on every major location-sharing app. They'll never know.</p>
+
+    <div class="apps-grid">
+        <div class="app-card snap reveal reveal-delay-1">
+            <svg class="app-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="22" fill="#FFFC00"/>
+                <path d="M50 22c-13 0-22 9-22 21 0 3 .5 6 2.5 8.5-2 .5-3.5 1.5-3.5 3 0 1 1 2.5 3.5 3.5-2 1.5-5.5 3.5-4 7 .5 2 4.5 2.5 8 2.5 1 3 6.5 5 15.5 5s14.5-2 15.5-5c3.5 0 7.5-.5 8-2.5 1.5-3.5-2-5.5-4-7 2.5-1 3.5-2.5 3.5-3.5 0-1.5-1.5-2.5-3.5-3 2-2.5 2.5-5 2.5-8.5 0-12-9-21-22-21z" fill="#fff"/>
+            </svg>
+            <div>
+                <h3>Snap Map</h3>
+                <div class="badge-active">Stealth Active</div>
+            </div>
+        </div>
+
+        <div class="app-card findmy reveal reveal-delay-2">
+            <svg class="app-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="22" fill="#34C759"/>
+                <circle cx="50" cy="50" r="28" fill="none" stroke="#fff" stroke-width="4"/>
+                <circle cx="50" cy="50" r="14" fill="none" stroke="#fff" stroke-width="4"/>
+                <path d="M50 50 L64 22" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="6" fill="#fff"/>
+            </svg>
+            <div>
+                <h3>Apple Find My</h3>
+                <div class="badge-active">Stealth Active</div>
+            </div>
+        </div>
+
+        <div class="app-card life reveal reveal-delay-3">
+            <svg class="app-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="22" fill="#8A2BE2"/>
+                <path d="M50 18C32 18 22 32 22 46c0 18 28 38 28 38s28-20 28-38c0-14-10-28-28-28z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+                <circle cx="50" cy="42" r="10" fill="none" stroke="#fff" stroke-width="5"/>
+            </svg>
+            <div>
+                <h3>Life360</h3>
+                <div class="badge-active">Stealth Active</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="features-section" id="features">
+    <div class="section-label reveal">Why LocSpoofer</div>
+    <h2 class="reveal reveal-delay-1">Everything You Need.</h2>
+    <p class="subtitle reveal reveal-delay-2">Powerful features, dead-simple interface.</p>
+
+    <div class="bento-grid">
+        <!-- Wide Card: Route Simulation -->
+        <div class="bento-card span-full reveal">
+            <svg class="route-visual" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10,100 C40,80 60,20 100,60 S160,10 190,30" stroke="rgba(0,210,106,0.4)" stroke-width="2" stroke-dasharray="6 4">
+                    <animate attributeName="stroke-dashoffset" from="0" to="-60" dur="2s" repeatCount="indefinite"/>
+                </path>
+                <circle cx="10" cy="100" r="4" fill="#fff" opacity="0.5"/>
+                <circle cx="190" cy="30" r="4" fill="var(--green)"/>
+                <!-- Vehicle icons -->
+                <text x="50" y="55" font-size="16" opacity="0.5">🚗</text>
+                <text x="110" y="35" font-size="16" opacity="0.5">✈️</text>
+                <text x="160" y="50" font-size="16" opacity="0.5">🚶</text>
+            </svg>
+            <div class="bento-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 18h4c1.1 0 2-.9 2-2V8c0-1.1.9-2 2-2h4"/>
+                    <circle cx="17" cy="6" r="3"/><circle cx="5" cy="18" r="3"/>
+                </svg>
+            </div>
+            <h3>Route Simulation</h3>
+            <p>Drive, walk, or fly along any custom route. Set your own speed, import GPX files, and move naturally across the map. Compatible with every app on your phone.</p>
+        </div>
+
+        <!-- Wireless -->
+        <div class="bento-card reveal reveal-delay-1">
+            <div class="bento-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                    <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                    <line x1="12" y1="20" x2="12.01" y2="20"/>
+                </svg>
+            </div>
+            <h3>Wireless Setup</h3>
+            <p>Connect over Wi-Fi. No cables, no hassle. Completely untethered.</p>
+        </div>
+
+        <!-- Joystick -->
+        <div class="bento-card reveal reveal-delay-2">
+            <div class="bento-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v8M8 12h8"/>
+                </svg>
+            </div>
+            <h3>Virtual Joystick</h3>
+            <p>Move in real-time with a D-Pad. Full manual control over your virtual position.</p>
+        </div>
+
+        <!-- All Apps -->
+        <div class="bento-card span-full reveal reveal-delay-3">
+            <div class="bento-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5"/>
+                    <path d="M16 8l-4 4-4-4"/><path d="M16 14l-4 4-4-4"/>
+                </svg>
+            </div>
+            <h3>Works With Every App</h3>
+            <p>Snap Map, Life360, Find My, Tinder, Pokémon GO, Uber — if it uses GPS, LocSpoofer controls it. Change your location and live your life on your own terms.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="cta-section">
+    <div class="section-label reveal">Limited Time Offer</div>
+    <h2 class="reveal reveal-delay-1">Ready to Teleport?</h2>
+    <p class="subtitle reveal reveal-delay-2">Take full control of your location. No one will ever know.</p>
+
+    <div class="cta-price-wrapper reveal reveal-delay-2">
+        <div class="price-display">
+            <span class="price-old">$10.00</span>
+            <span class="price-new cta-price">$3.00</span>
+            <span class="price-tag">70% OFF</span>
+        </div>
+    </div>
+
+    <div class="btn-group reveal reveal-delay-3">
+        <a href="https://cagandogan.gumroad.com/l/gpsSp00f" class="lemonsqueezy-button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            Get LocSpoofer — $3.00
+        </a>
+        <a href="#" class="btn-trial" id="btn-trial-2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span class="trial-text-2">Free Trial — Download</span>
+        </a>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2026 LocSpoofer. All rights reserved.</p>
+</footer>
+
+<!-- Gumroad Embed Overlay -->
+<script src="https://gumroad.com/js/embed.js" async></script>
+
+<script>
+(function() {
+    'use strict';
+
+    // ── OS DETECTION & TRIAL BUTTON ──
+    function getOS() {
+        const ua = navigator.userAgent || navigator.platform || '';
+        if (/Mac/i.test(ua)) return 'mac';
+        return 'win';
+    }
+
+    const os = getOS();
+    const trialFile = os === 'mac' ? 'GPSSpoof.dmg' : 'GPS_Spoof.exe';
+    const osLabel = os === 'mac' ? 'macOS' : 'Windows';
+    const osIcon = os === 'mac' ? '🍎' : '🪟';
+
+    // Update all trial buttons
+    document.querySelectorAll('#btn-trial, #btn-trial-2').forEach(btn => {
+        btn.href = trialFile;
+        btn.setAttribute('download', '');
+    });
+
+    const trialText1 = document.getElementById('trial-text');
+    if (trialText1) trialText1.textContent = `Free Trial for ${osLabel} ${osIcon}`;
+
+    const trialText2 = document.querySelector('.trial-text-2');
+    if (trialText2) trialText2.textContent = `Free Trial for ${osLabel} ${osIcon}`;
+
+    // ── SCROLL REVEAL ──
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ── ANIMATED PRICE DROP ──
+    let priceAnimated = false;
+
+    function animatePrice() {
+        if (priceAnimated) return;
+        priceAnimated = true;
+
+        const priceEl = document.getElementById('price-new');
+        const tagEl = document.getElementById('price-tag');
+        const oldEl = document.getElementById('price-old');
+        if (!priceEl) return;
+
+        let current = 10.00;
+        const target = 3.00;
+        const duration = 1800;
+        const startTime = performance.now();
+
+        function easeOutExpo(t) {
+            return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        }
+
+        function tick(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = easeOutExpo(progress);
+            current = 10.00 - (10.00 - target) * eased;
+            priceEl.textContent = '$' + current.toFixed(2);
+
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            } else {
+                priceEl.textContent = '$3.00';
+                tagEl.style.opacity = '1';
+                tagEl.style.transition = 'opacity 0.5s';
+                oldEl.style.opacity = '0.4';
+            }
+        }
+
+        // Small delay so user catches the $10
+        setTimeout(() => {
+            requestAnimationFrame(tick);
+        }, 800);
+    }
+
+    // Trigger price animation when hero is visible
+    const heroObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animatePrice();
+                heroObserver.disconnect();
+            }
+        });
+    }, { threshold: 0.3 });
+
+    const heroSection = document.querySelector('.hero');
+    if (heroSection) heroObserver.observe(heroSection);
+
+})();
+</script>
+
+</body>
+</html>
