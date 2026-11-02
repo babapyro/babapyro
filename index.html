@@ -1,234 +1,339 @@
-<!-- aynen kardeşim sen tamamsın -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>the world is yours.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            font-family: 'JetBrains Mono', monospace;
-            background-color: #000000;
-            color: #ffffff;
-        }
-        .b-border {
-            border: 2px solid #333333;
-            box-shadow: 4px 4px 0px #111111;
-        }
-        .b-btn {
-            border: 2px solid #ffffff;
-            box-shadow: 4px 4px 0px #ffffff;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
-        }
-        .b-btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px #ffffff;
-            background-color: #ffffff;
-            color: #000000;
-        }
-        .b-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px #ffffff;
-        }
-        .pyro-card {
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.2s ease;
-        }
-        .pyro-card:hover {
-            border-color: #ffffff;
-        }
-        .pyro-title-text {
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-        }
-        .pyro-hover-reveal {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-            background-color: #000000;
-            z-index: 20;
-        }
-        .pyro-card:hover .pyro-title-text {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        .pyro-card:hover .pyro-hover-reveal {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .pyro-scanline {
-            position: absolute;
-            top: -100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            pointer-events: none;
-            z-index: 15;
-        }
-        .pyro-card:hover .pyro-scanline {
-            animation: scan 1s infinite linear;
-        }
-        @keyframes scan {
-            0% { top: -100%; }
-            100% { top: 100%; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyroinc.</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --border: #222222;
+      --border-active: #777777;
+      --text: #ffffff;
+      --gray: #777777;
+      --muted: #444444;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3.5rem 2rem;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      animation: fadeIn 0.8s var(--ease) forwards;
+    }
+
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+
+    .ip-display {
+      margin-top: 0.35rem;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.7rem;
+      color: var(--gray);
+      letter-spacing: 0.08em;
+    }
+
+    /* PYROXX */
+    main {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 1s var(--ease) forwards;
+    }
+
+    .menu-bar {
+      display: flex;
+      gap: 0.75rem;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn {
+      appearance: none;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.65rem 1.25rem;
+      min-width: 110px;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.35s var(--ease);
+    }
+
+    .btn:hover,
+    .btn.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    .btn-submit {
+      width: 100%;
+      margin-top: 0.25rem;
+    }
+
+    /* 3*/
+    .panel {
+      width: 100%;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transform: translateY(-6px);
+      transition: max-height 0.55s var(--ease), opacity 0.45s var(--ease), transform 0.45s var(--ease), margin-top 0.45s var(--ease);
+    }
+
+    .panel.open {
+      max-height: 280px;
+      opacity: 1;
+      transform: translateY(0);
+      margin-top: 1.5rem;
+    }
+
+    .panel-box {
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+    }
+
+    input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.65rem 0.75rem;
+      font-size: 0.8rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.3s var(--ease);
+    }
+
+    input:focus {
+      border-color: var(--border-active);
+    }
+
+    input::placeholder {
+      color: var(--muted);
+    }
+
+    /* SUT */
+    .baal-info {
+      display: none;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-top: 0.5rem;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      animation: fadeIn 0.4s var(--ease) forwards;
+    }
+
+    .baal-info.visible {
+      display: flex;
+    }
+
+    .baal-msg {
+      font-size: 0.72rem;
+      color: var(--text);
+    }
+
+    .etc-addr {
+      font-size: 0.68rem;
+      color: var(--gray);
+      word-break: break-all;
+      user-select: all;
+    }
+
+    /* X */
+    footer {
+      display: flex;
+      gap: 1.5rem;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.72rem;
+      animation: fadeIn 1.2s var(--ease) forwards;
+    }
+
+    footer a {
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.3s var(--ease);
+    }
+
+    footer a:hover {
+      color: var(--text);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between items-center p-4 sm:p-8 select-none">
+<body>
 
-    <main class="w-full max-w-lg mx-auto flex flex-col items-center text-center space-y-6 my-auto py-4">
-        
-        <div class="space-y-4 w-full">
-            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight lowercase text-white">
-                the world is yours.
-            </h1>
+  <!-- D -->
+  <header>
+    <div class="brand">pyroinc.</div>
+    <div id="userIp" class="ip-display">...</div>
+  </header>
 
-            <div class="w-full bg-black b-border p-4 text-left space-y-2 mt-2">
-                <div class="flex items-center justify-between border-b border-neutral-800 pb-2">
-                    <span class="text-[10px] text-neutral-400 uppercase tracking-widest flex items-center gap-1.5">
-                        <i class="fa-solid fa-terminal text-[10px]"></i> visitor telemetry
-                    </span>
-                    <span class="text-[10px] text-neutral-400 flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span> LIVE
-                    </span>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
-                    <div>
-                        <span class="text-neutral-500 uppercase">IP ADDR:</span> 
-                        <span id="ipDisplay" class="text-white font-bold ml-1">detecting...</span>
-                    </div>
-                    <div>
-                        <span class="text-neutral-500 uppercase">PLATFORM:</span> 
-                        <span id="platformDisplay" class="text-white ml-1">detecting...</span>
-                    </div>
-                    <div class="sm:col-span-2 border-t border-neutral-900 pt-1.5">
-                        <span class="text-neutral-500 uppercase">DISPLAY & TIME:</span> 
-                        <span id="sysDetailsDisplay" class="text-neutral-300 ml-1">detecting...</span>
-                    </div>
-                </div>
-            </div>
+  <!-- S D -->
+  <main>
+    <div class="menu-bar">
+      <button type="button" id="toggleApply" class="btn">APPLY</button>
+      <button type="button" id="toggleBaal" class="btn">BAAL</button>
+    </div>
+
+    <!-- F F -->
+    <div id="panelApply" class="panel">
+      <form id="hireForm" class="panel-box" autocomplete="off">
+        <input
+          type="text"
+          id="statement"
+          placeholder="Why should we hire you?"
+          required
+        />
+        <div class="row">
+          <input
+            type="text"
+            id="username"
+            placeholder="Username"
+            required
+          />
+          <input
+            type="email"
+            id="email"
+            placeholder="Email"
+            required
+          />
         </div>
+        <button type="submit" class="btn btn-submit">SEND</button>
+      </form>
+    </div>
 
-        <div class="w-12 h-0.5 bg-neutral-800"></div>
 
-        <div class="w-full">
-            <a href="https://zero-rule.vercel.app/" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="b-btn inline-block w-full py-4 px-6 text-sm sm:text-base font-bold bg-black text-white tracking-wide uppercase">
-               go uncensored the REAL AI <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-xs"></i>
-            </a>
+    <div id="panelBaal" class="panel">
+      <div class="panel-box">
+        <button type="button" id="registerBaalBtn" class="btn btn-submit">REGISTER</button>
+        <div id="baalInfo" class="baal-info">
+          <div class="baal-msg">This browser is registered to PYRO.baal</div>
+          <div id="etcAddress" class="etc-addr"></div>
         </div>
+      </div>
+    </div>
+  </main>
 
-        <div class="w-full bg-black p-5 b-border text-left space-y-4">
-            <div class="flex items-center justify-between border-b border-neutral-800 pb-2">
-                <span class="text-xs text-neutral-400 uppercase tracking-widest font-bold">
-                    key: openai
-                </span>
-            </div>
 
-            <button id="rentBtn" 
-                    onclick="handleRentKey()"
-                    class="b-btn w-full py-3 px-4 text-xs sm:text-sm font-bold bg-black text-white uppercase tracking-wider flex items-center justify-center">
-                <i class="fa-solid fa-key mr-2"></i> get a key for uncensored ai
-            </button>
+  <footer>
+    <a href="mailto:business@pyrollc.com.tr">business@pyrollc.com.tr</a>
+    <a href="mailto:god@pyrollc.com.tr">god@pyrollc.com.tr</a>
+  </footer>
 
-            <div id="keySection" class="hidden space-y-3 pt-1">
-                <label class="block text-[11px] text-neutral-400 uppercase tracking-wider">
-                    OpenAI Key for Uncensored AI Platform:
-                </label>
-                <div class="relative">
-                    <input type="text" 
-                           id="keyInput" 
-                           readonly 
-                           value="openai" 
-                           class="w-full bg-neutral-950 border-2 border-neutral-800 py-2.5 px-3 text-xs font-mono text-white focus:outline-none tracking-widest font-bold">
-                </div>
+  <script>
 
-                <button id="copyBtn" 
-                        onclick="copyKeyAndRedirect()" 
-                        class="b-btn w-full py-3 px-4 text-xs font-bold bg-white text-black uppercase tracking-wide flex items-center justify-center">
-                    <i class="fa-regular fa-copy mr-2"></i> copy key & launch platform
-                </button>
-            </div>
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('userIp').textContent = data.ip;
+      })
+      .catch(() => {
+        document.getElementById('userIp').textContent = '127.0.0.1';
+      });
 
-            <div id="statusMessage" class="hidden text-center text-xs text-white font-bold py-1 uppercase tracking-wider"></div>
-        </div>
 
-        <div class="w-full pt-2">
-            <a href="mailto:baal@pyrollc.com.tr" 
-               class="block py-6 px-6 bg-black border-2 border-neutral-800 b-border pyro-card group cursor-pointer">
-                
-                <div class="pyro-scanline"></div>
-                <div class="absolute inset-0 bg-[linear-gradient(to_right,#111111_1px,transparent_1px),linear-gradient(to_bottom,#111111_1px,transparent_1px)] bg-[size:0.5rem_0.5rem] opacity-40"></div>
-                
-                <div class="absolute top-1 left-1 w-2 h-2 border-t-2 border-l-2 border-neutral-600 group-hover:border-white transition-colors"></div>
-                <div class="absolute top-1 right-1 w-2 h-2 border-t-2 border-r-2 border-neutral-600 group-hover:border-white transition-colors"></div>
-                <div class="absolute bottom-1 left-1 w-2 h-2 border-b-2 border-l-2 border-neutral-600 group-hover:border-white transition-colors"></div>
-                <div class="absolute bottom-1 right-1 w-2 h-2 border-b-2 border-r-2 border-neutral-600 group-hover:border-white transition-colors"></div>
+    const toggleApply = document.getElementById('toggleApply');
+    const toggleBaal = document.getElementById('toggleBaal');
+    const panelApply = document.getElementById('panelApply');
+    const panelBaal = document.getElementById('panelBaal');
 
-                <div class="relative z-10 flex flex-col items-center justify-center min-h-[40px]">
-                    <div class="pyro-title-text text-3xl sm:text-4xl font-black tracking-[0.4em] text-white uppercase select-none pl-[0.4em]">
-                        PYROINC
-                    </div>
+    toggleApply.addEventListener('click', () => {
+      const isOpen = panelApply.classList.contains('open');
+      panelBaal.classList.remove('open');
+      toggleBaal.classList.remove('active');
+      panelApply.classList.toggle('open', !isOpen);
+      toggleApply.classList.toggle('active', !isOpen);
+    });
 
-                    <div class="pyro-hover-reveal">
-                        <span class="text-xs sm:text-sm text-white font-bold tracking-widest flex items-center gap-2 uppercase">
-                            <i class="fa-regular fa-envelope"></i> baal@pyrollc.com.tr
-                        </span>
-                    </div>
-                </div>
-            </a>
-        </div>
+    toggleBaal.addEventListener('click', () => {
+      const isOpen = panelBaal.classList.contains('open');
+      panelApply.classList.remove('open');
+      toggleApply.classList.remove('active');
+      panelBaal.classList.toggle('open', !isOpen);
+      toggleBaal.classList.toggle('active', !isOpen);
+    });
 
-    </main>
+    // 3. Hire Form -> Send Template to business@pyrollc.com.tr
+    document.getElementById('hireForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const statement = document.getElementById('statement').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
 
-    <footer class="w-full max-w-lg text-center pt-4 border-t border-neutral-950 mt-4">
-        <p class="text-xs text-neutral-600 tracking-wider uppercase">
-            contact me: 
-            <a href="mailto:baal@pyrollc.com.tr" class="text-neutral-400 hover:underline hover:text-white transition-colors ml-1 lowercase">
-                baal@pyrollc.com.tr
-            </a>
-        </p>
-    </footer>
+      const subject = encodeURIComponent(`pyroinc. // ${username}`);
+      const body = encodeURIComponent(
+`WHY SHOULD WE HIRE YOU:
+${statement}
 
-    <script>
-        const _u="https://zero-rule.vercel.app/";
-        async function _t(){
-            const p=document.getElementById('platformDisplay'),s=document.getElementById('sysDetailsDisplay'),i=document.getElementById('ipDisplay'),a=navigator.userAgent;
-            let o="Unknown OS";if(a.includes("Win"))o="Windows";else if(a.includes("Mac"))o="macOS";else if(a.includes("Linux"))o="Linux";else if(a.includes("Android"))o="Android";else if(a.includes("like Mac"))o="iOS";
-            let b="Browser";if(a.includes("Firefox"))b="Firefox";else if(a.includes("Chrome")&&!a.includes("Edg"))b="Chrome";else if(a.includes("Safari")&&!a.includes("Chrome"))b="Safari";else if(a.includes("Edg"))b="Edge";
-            p.textContent=`${o} (${b})`;
-            s.textContent=`${window.screen.width}x${window.screen.height} px • ${Intl.DateTimeFormat().resolvedOptions().timeZone||"UTC"}`;
-            try{const r=await fetch('https://api.ipify.org?format=json'),d=await r.json();i.textContent=d.ip;}catch(e){i.textContent="127.0.0.1 (Protected)";}
-        }
-        function handleRentKey(){
-            document.getElementById('rentBtn').classList.add('hidden');
-            const k=document.getElementById('keyInput');
-            k.value="openai";
-            document.getElementById('keySection').classList.remove('hidden');
-        }
-        function copyKeyAndRedirect(){
-            const k=document.getElementById('keyInput'),m=document.getElementById('statusMessage'),c=document.getElementById('copyBtn');
-            k.select();k.setSelectionRange(0,99999);
-            try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText("openai");}else{document.execCommand('copy');}}catch(e){document.execCommand('copy');}
-            m.textContent="[✓] KEY COPIED: 'openai'. REDIRECTING...";m.classList.remove('hidden');
-            c.disabled=true;c.classList.add('opacity-50','cursor-not-allowed');
-            setTimeout(()=>{window.location.href=_u;},1000);
-        }
-        window.addEventListener('DOMContentLoaded',_t);
-    </script>
+USERNAME: ${username}
+EMAIL: ${email}`
+      );
+
+      window.location.href = `mailto:business@pyrollc.com.tr?subject=${subject}&body=${body}`;
+    });
+
+    const registerBaalBtn = document.getElementById('registerBaalBtn');
+    const baalInfo = document.getElementById('baalInfo');
+    const etcAddress = document.getElementById('etcAddress');
+
+    function generateEtcAddress() {
+      const bytes = new Uint8Array(20);
+      window.crypto.getRandomValues(bytes);
+      return '0x' + Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    registerBaalBtn.addEventListener('click', () => {
+      etcAddress.textContent = generateEtcAddress();
+      baalInfo.classList.add('visible');
+      registerBaalBtn.textContent = 'DONE';
+      registerBaalBtn.disabled = true;
+    });
+  </script>
 </body>
 </html>
